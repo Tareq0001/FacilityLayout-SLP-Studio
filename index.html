@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FacilityLayout SLP Studio V2 | Cyberpunk Tactical Industrial HUD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700;800;900&family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="cyber-theme">
+  <!-- Scanline CRT Effect Overlay -->
+  <div class="cyber-scanlines"></div>
+  <div class="cyber-hud-corner tl">[SYS.LOC: 24.77°N 46.73°E]</div>
+  <div class="cyber-hud-corner tr">[DEFENSE GRID: SECURE]</div>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="cyber-badge">
+        <span class="blinking-cursor">■</span>
+        <span class="badge-text" data-i18n="badgeEngine">TACTICAL INDUSTRIAL HUD · SLP & 2-OPT ALGORITHM</span>
+      </div>
+      <h1 class="brand-title">
+        <span class="cyber-glow-cyan" data-i18n="appTitle">FACILITY MATRIX</span>
+        <span class="title-sub" data-i18n="appSub">CYBER HUD V2</span>
+      </h1>
+      <p class="brand-desc" data-i18n="appDesc">Plant Blueprint Matrix, Holographic Material Vectors & 2-Opt Heuristic Auto-Optimizer</p>
+    </div>
+    
+    <div class="header-right">
+      <div class="cyber-status-pill">
+        <span class="csp-label" data-i18n="layoutStatus">TOPOLOGY:</span>
+        <span class="csp-val" id="layoutStateBadge">ONLINE · ACTIVE</span>
+      </div>
+      <button id="langToggle" class="btn-cyber-sec">
+        <span id="langLabel">العربية</span>
+      </button>
+      <button id="exportReportBtn" class="btn-cyber-prim">
+        <span data-i18n="exportBtn">EXECUTE TELEMETRY AUDIT</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Presets Bar -->
+  <section class="cyber-panel presets-section">
+    <div class="presets-container">
+      <div class="presets-label-block">
+        <span class="hud-bracket">[CONFIG]</span>
+        <span class="preset-label" data-i18n="presetsLabel">PLANT TOPOLOGY PRESETS:</span>
+      </div>
+      <div class="preset-buttons">
+        <button class="preset-btn active" data-preset="lean-u">
+          <span>// U-FLOW</span>
+          <span data-i18n="presetLean">Lean U-Flow (Best Practice)</span>
+        </button>
+        <button class="preset-btn" data-preset="job-shop">
+          <span>// JOB-SHOP</span>
+          <span data-i18n="presetJobShop">Process Job Shop</span>
+        </button>
+        <button class="preset-btn" data-preset="chaotic">
+          <span>// BASELINE</span>
+          <span data-i18n="presetChaotic">Disorganized Baseline (High Cost)</span>
+        </button>
+      </div>
+
+      <div class="action-btn-group">
+        <button id="optimizeBtn" class="btn-cyber-accent">
+          <span data-i18n="runOptimize">ENGAGE 2-OPT OPTIMIZER</span>
+        </button>
+        <button id="shuffleBtn" class="btn-cyber-ghost">
+          <span data-i18n="shuffle">SHUFFLE</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- KPI Cards Grid -->
+  <section class="kpi-grid">
+    <div class="kpi-card accent-cyan">
+      <div class="hud-reticle"></div>
+      <div class="kpi-tag">// VECTOR LOSS</div>
+      <span class="kpi-label" data-i18n="kpiScore">Material Handling Cost (Z)</span>
+      <div class="kpi-val" id="kpiScore">0</div>
+      <span class="kpi-sub" data-i18n="kpiScoreSub">Ton · Meters / Shift</span>
+    </div>
+
+    <div class="kpi-card accent-green">
+      <div class="hud-reticle"></div>
+      <div class="kpi-tag">// DELTA EFFICIENCY</div>
+      <span class="kpi-label" data-i18n="kpiGain">Efficiency Gain vs Baseline</span>
+      <div class="kpi-val" id="kpiGain">0.0%</div>
+      <span class="kpi-sub" data-i18n="kpiGainSub">Cumulative reduction</span>
+    </div>
+
+    <div class="kpi-card accent-amber">
+      <div class="hud-reticle"></div>
+      <div class="kpi-tag">// CONGESTION PIN</div>
+      <span class="kpi-label" data-i18n="kpiBottleneck">Critical Flow Bottleneck</span>
+      <div class="kpi-val" id="kpiBottleneck">-</div>
+      <span class="kpi-sub" id="kpiBottleneckSub">-</span>
+    </div>
+
+    <div class="kpi-card accent-purple">
+      <div class="hud-reticle"></div>
+      <div class="kpi-tag">// ADJACENCY MATRIX</div>
+      <span class="kpi-label" data-i18n="kpiAdjacency">A-Relationship Adjacency</span>
+      <div class="kpi-val" id="kpiAdjacency">0%</div>
+      <span class="kpi-sub" data-i18n="kpiAdjacencySub">Critical cells adjacent</span>
+    </div>
+  </section>
+
+  <!-- Studio Main Layout -->
+  <main class="studio-layout">
+    <!-- Left Column: 4x2 Factory Bay Grid -->
+    <section class="cyber-panel bays-panel">
+      <div class="panel-header">
+        <div>
+          <span class="hud-bracket">[BAY TOPOLOGY]</span>
+          <h2 class="panel-title" data-i18n="floorGridTitle">Interactive 4×2 Hangar Bays</h2>
+          <p class="panel-desc" data-i18n="floorGridDesc">Click any two department nodes to swap cellular plant allocation.</p>
+        </div>
+        <div class="swap-status-badge" id="swapHintBadge" data-i18n="hintIdle">[SELECT BAY A]</div>
+      </div>
+
+      <div class="bays-grid-container" id="baysGrid">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="bay-legend">
+        <div class="leg-item"><span class="leg-col col-cyan"></span><span data-i18n="legendMatIn">RAW MATERIALS IN</span></div>
+        <div class="leg-item"><span class="leg-col col-purple"></span><span data-i18n="legendMachining">MACHINING & PRESS</span></div>
+        <div class="leg-item"><span class="leg-col col-amber"></span><span data-i18n="legendAssembly">ASSEMBLY & FAB</span></div>
+        <div class="leg-item"><span class="leg-col col-green"></span><span data-i18n="legendQCShip">QC & DISPATCH</span></div>
+      </div>
+    </section>
+
+    <!-- Right Column: Flow Vector Dynamic Canvas -->
+    <section class="cyber-panel canvas-panel">
+      <div class="panel-header">
+        <div>
+          <span class="hud-bracket">[RADAR VECTOR]</span>
+          <h2 class="panel-title" data-i18n="canvasTitle">Holographic Transit Vectors</h2>
+          <p class="panel-desc" data-i18n="canvasDesc">Live animated laser energy vectors tracking material volume and distance.</p>
+        </div>
+        <div class="canvas-controls">
+          <label class="cyber-toggle">
+            <input type="checkbox" id="showLabelsCheck" checked>
+            <span data-i18n="showLabels">LABELS</span>
+          </label>
+          <label class="cyber-toggle">
+            <input type="checkbox" id="animateFlowCheck" checked>
+            <span data-i18n="animateVectors">PARTICLES</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="canvas-container">
+        <canvas id="flowCanvas"></canvas>
+      </div>
+
+      <div class="panel-footer-stats">
+        <div class="pfs-col">
+          <span class="pfs-label" data-i18n="activeLinks">ACTIVE LINKS:</span>
+          <span class="pfs-val" id="activeLinksCount">14 vectors</span>
+        </div>
+        <div class="pfs-col">
+          <span class="pfs-label" data-i18n="avgTransitDist">AVG TRANSIT:</span>
+          <span class="pfs-val" id="avgDistanceVal">0 m</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Detailed Tabbed Analysis -->
+  <section class="cyber-panel detailed-section">
+    <div class="tabs-header">
+      <button class="tab-btn active" data-tab="tabFromTo">
+        <span>[01]</span>
+        <span data-i18n="tabFromTo">From-To Flow Matrix (Loads/Shift)</span>
+      </button>
+      <button class="tab-btn" data-tab="tabSLP">
+        <span>[02]</span>
+        <span data-i18n="tabSLP">Muther's SLP Activity Chart (REL)</span>
+      </button>
+      <button class="tab-btn" data-tab="tabConvergence">
+        <span>[03]</span>
+        <span data-i18n="tabConvergence">2-Opt Heuristic Convergence</span>
+      </button>
+    </div>
+
+    <div class="tabs-content">
+      <div class="tab-pane active" id="tabFromTo">
+        <div class="table-responsive">
+          <table class="cyber-table" id="fromToTable">
+            <!-- Injected via JS -->
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="tabSLP">
+        <div class="table-responsive">
+          <table class="cyber-table" id="slpTable">
+            <!-- Injected via JS -->
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="tabConvergence">
+        <div class="convergence-layout">
+          <div class="canvas-container" style="height:220px;">
+            <canvas id="convergenceChart"></canvas>
+          </div>
+          <div class="convergence-hud-stats" id="convergenceStats">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-left">
+      <span class="hud-bracket">[HUD OS v2.4]</span>
+      <span data-i18n="footerStatus">CYBERPUNK TACTICAL FACILITY OPTIMIZATION SYSTEM</span>
+    </div>
+    <div class="footer-right">
+      <span>Tareq0001 · Advanced Industrial Engineering</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
